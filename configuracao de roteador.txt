@@ -1,0 +1,18 @@
+!router 2911 (lado direito)
+enable 
+	configure terminal
+	interface GigabitEthernet0/1
+	descrition inferface de WAN
+	ip address 10.0.0.2 255.255.255.252
+	no shutdown
+	end
+write
+!router 1941 (lado esquerdo)
+enable 
+	configure terminal
+	interface GigabitEthernet0/1
+	descrition inferface de WAN
+	ip address 10.0.0.1 255.255.255.252
+	no shutdown
+	end
+write
