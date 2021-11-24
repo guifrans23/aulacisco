@@ -1,0 +1,105 @@
+OBSERVAÇÃO IMPORTANTE: ALTERAR TODAS AS INFORMAÇÕES ONDE O: ??? (PONTO DE INTERROGAÇÃO) ESTIVER
+PRESENTE NAS CONFIGURAÇÕES PARA OS VALORES DO SEU GRUPO
+
+!Acessando o modo exec privilegiado
+enable
+
+!Configuração de data/hora em inglês, abreviado ou completo
+!Exemplo: April ou Apr
+!Primeiro Hora no formato: 00:00:00 (hora:minutos:segundos) depois Data no formato: Dia Mês Ano
+clock set ??:??:?? ?? ???????? ????
+
+	!Acessar modo de configuração global
+	configure terminal
+  
+	!Configuração do nome do equipamento
+	!Obrigatório para a configuração do SSH e demais serviços de redes
+	!Mudar o nome do switch para cada equipamento do seu grupo (exemplo: sw-g01, sw-g02, etc...)
+	hostname sw-g??
+  
+	!Habilitar o serviço de Criptografia de Senhas do tipo Password Tipo-7
+	service password-encryption
+	
+	!Habilitando o serviço de marcação de Data/Hora detalhado nos Logs
+	service timestamps log datetime msec
+	
+	!Verificar as tentativas de conexão simultaneas, fazer o bloqueio de um
+	!período determinado de tempo, proteção contra ataques do tipo Brute Force
+	login block-for 120 attempts 4 within 60
+  
+	!Desativar a resolução de nomes de domínio
+	no ip domain-lookup
+  
+	!Configuração do Banner da mensagem do dia
+	!Desafio: Buscar na Internet imagens ASCII para o Banner da Cisco
+	banner motd #AVISO: acesso autorizado somente a funcionarios#
+  
+	!Habilitar a senha do tipo secret Tipo-5 para o modo enable privilegiado
+	enable secret 123@senac
+  
+	!Criação dos usuários, senhas do Tipo-5 e privilegios diferenciados
+	username ???nome_do_primeiro_integrante privilege 15 secret 123@senac
+	username ???nome_do_segundo_integrante privilege 15 secret 123@senac
+	username ???nome_do_terceiro_integrante privilege 15 secret 123@senac
+	username ???nome_do_quarto_integrante privilege 15 secret 123@senac
+  
+	!Configuração do nome de domínio, obrigatório para a configuração do SSH
+	ip domain-name cisco.com
+  
+	!Criação da chave de criptografia para habilitar o serviço do SSH
+	!Utilizar módulo de criptografia de 1024 bits
+	crypto key generate rsa usage-keys modulus 1024
+	
+	!Habilitando a versão 2 do serviço do SSH
+	ip ssh version 2
+	
+	!Habilitar o tempo de inatividade para novas conexões do SSH
+	ip ssh time-out 60
+	
+	!Habilitar o número máximo de tentativas de conexão do SSH
+	ip ssh authentication-retries 2
+	
+	!Acessando a linha console
+	line console 0
+		
+		!Habilitando senha do tipo Password Tipo-7
+		password 123@senac
+		
+		!Forçando fazer login com usuário e senha local
+		login local
+		
+		!Sincronizando os logs na tela
+		logging synchronous
+		
+		!Habilitando o tempo de inatividade do console
+		exec-timeout 5 30
+		
+		!Saindo da linha console
+		exit
+	
+	!Acessando as linhas virtuais
+	line vty 0 4
+		
+		!Habilitando senha do tipo Password Tipo-7
+		password 123@senac
+		
+		!Forçando fazer login com usuário e senha local
+		login local 
+		
+		!Sincronizando os logs na tela
+		logging synchronous
+		
+		!Habilitando o tempo de inatividade do terminal
+		exec-timeout 5 30
+		
+		!Configuração do tipo de protocolo de transporte de entrada
+		transport input ssh
+		
+		!Saindo de todos os níveis
+		end
+
+!Salvando as confgurações
+copy running-config startup-config
+	
+!Visualizando as confgurações
+show running-config

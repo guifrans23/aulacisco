@@ -1,0 +1,62 @@
+Reset do Switch Cisco 3560
+
+Utilizar o aplicativo Putty para acessar o Switch Cisco 3560 via Cabo Console.
+
+_01# Deixar o Switch Cisco 3560 inicializar normalmente até os LED´s SYST e STAT ficar VERDE.
+
+_02# Após a inicialização, pressionar o Botão Mode por apróximadamente 15/20 segundos até o 
+Switch Cisco 3560 entrar no modo de ROMmon reinicializar o sistema. Após esse procedimento o 
+Switch Cisco 3560 será resetado para o modo de fábrica.
+
+============================================================================================
+Caso o Switch não volte para o estado de fábrica, utilizar os procedimentos abaixo:
+
+1. Pressionar o botão MODE até o switch reinicializar
+2. Na tela de inicialização, na mensagem de hardware, presssionar o botão MODE para abortar 
+o carregamento do IOS
+3. Digitar o comando: flash_init
+4. Listar o contéudo da Flash: dir flash:
+5. Renomear o arquuivo: rename flash:config.text flash:config.old
+6. Inicializar o sistema: boot
+7. Limpar o Statup-config: erase startup-config
+8. Limpar as VLAN: delete flash:vlan.dat
+9. Reinicializar o Switch: reload
+
+============================================================================================
+Reset do Roteador (Router) Cisco 2911
+
+Utilizar o aplicativo Putty para acessar o Router Cisco 2911 via Cabo Console.
+
+_01# Desligar o Router Cisco 2911, aguardar 30 segundos e ligar novamente o Router.
+
+_02# Após ligar o Router Cisco 2911, parar a inicialização do IOS utilizando Ctrl + Break 
+(No Putty utilizar Botão direito do Mouse na Barra de Título opção: Send Command: Break)
+
+CUIDADO!!!!!! com a chave de registro que você vai digitar no ROMmon (veja o tópico Obs1 e 2:)
+_03# Nas configurações do Cisco ROMmon digite a chave em hexadecimal: confreg 0x2142 <Enter>
+
+_04# Após a mudança da chave de inicialização, digite: reset <Enter> para reiniciar o router
+
+_05# Aguardar a ininicialização do Router, nessa etapa ele vai inicializar o sistema sem ler 
+o arquivo de configuração startup-config da NVRAM.
+    Would you like to enter the initial configuration dialog? [yes/no]: no <Enter>
+
+_06# Após a inicialização do Router Cisco 2911, vamos fazer a limpeza das configurações do 
+startup-config e forçcar novamente ler arquivo startup-confog da NVRAM.
+    _06.1. Acessar o modo privilegiado: enable <Enter>
+    _06.2. Limpar a NVRAM: erase startup-config <Enter>
+    _06.3. Acessar o modo de configuração global: configure terminal <Enter>
+    _06.4. Mudar o registro de inicialização: config-register 0x2102 <Enter>
+    _06.5. Sair de todos os modos: end <Enter>
+    _06.6. Salvar as configurações: copy running-config startup-config <Enter>
+    _06.7. Reinicializar o router: reload <Enter>
+    _06.8. Verificar a chave de registro: enable <Enter>, show version <Enter>
+
+Obs1: caso você digite chaves diferentes na ROMmon o sistema pode inicializar com caracteres 
+estranhos, muitas vezes isso está associado a velocidade da porta (Padrão 9600), faça o teste 
+mudando as velocidades para: 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 até achar a
+opção que os caracteres fique legível. 
+
+Obs2: será necessário alterar novamente a chave de registro para: config-register 0x2102 <Enter>
+configurar a velocidade do console: line console 0 <Enter>, speed 9600 <Enter>, salvar as
+configurações: copy running-config startup-config e reinicializar o router: reload <Enter>
