@@ -1,0 +1,33 @@
+!Acessando o modo exec privilegiado
+enable
+
+	!Acessar modo de configuração global
+	configure terminal
+	
+	!Configuração do gateway padrão IPv4 do SVI do Switch Cisco 3560
+	!Utilizado para acessar remotamente o equipamento
+	!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: 172.16.1.254 (grupo-01)
+	ip default-gateway 172.16.???.254
+  
+	!Configuração da interface virtual VLAN SVI
+	interface vlan 1
+		
+		!Configuração da descrição
+		description Interface SVI de Gerenciamento do Grupo-???
+		
+		!Configuração do endereçamento IPv4 do SVI
+		!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: 172.16.1.254 (grupo-01)
+		ip address 172.16.???.253 255.255.255.0
+		
+		!Inicializando a interface
+		no shutdown
+		
+		!Saindo de todos os níveis
+		end
+
+!Salvando as informações
+copy running-config startup-config
+	
+!Comandos para visualização das informações:
+show running-config
+show ip interface brief

@@ -1,0 +1,54 @@
+!Acessando o modo EXEC Privilégiado
+enable
+
+	!Acessando o modo de Configuração Global de Comandos
+	configure terminal
+		
+		!Configurando a Faixa de Exclusão de Endereços IPv4 do Escopo do DHCP Server
+		!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: 172.16.1.0 172.16.1.100 (grupo-01)
+		ip dhcp excluded-address 172.16.???.0 172.16.???.100
+		ip dhcp excluded-address 172.16.???.200 172.16.???.254
+		
+		!Configurando o Pool do DHCP Server da LAN
+		!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: grupo-01
+		ip dhcp pool grupo-??
+		
+			!Configurando a Rede do Pool do DHCP da LAN
+			!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: 172.16.1.0 (grupo-01)
+			network 172.16.???.0 255.255.255.0
+			
+			!Configurando o Gateway padrão do Pool da LAN
+			!Obs: na opção de: ??? colocar o número do seu Grupo: exemplo: 172.16.1.254 (grupo-01)
+			default-router 172.16.???.254
+			
+			!Configurando o Endereço IPv4 do Servidor de DNS do Pool da LAN
+			dns-server 8.8.8.8 8.8.4.4
+			
+			!Configurando o Nome de Domínio do Pool da LAN
+			domain-name senac.tat
+			
+			!Saindo de todos os níveis
+			end
+
+!Salvando as confgurações
+copy running-config startup-config
+
+!Verificando as informações do Pool DHCP Server
+show ip dhcp pool
+
+!Verificando as configurações de rede no GNU/Linux (Terminal: Ctrl+Alt+T)
+ifconfig
+route -n
+systemd-resolve --status
+
+!Testando o ping no GNU/Linux (Terminal: Ctrl+Alt+T)
+ping 172.16.???.253
+ping 172.16.???.254
+
+!Utilizar somente essas opções caso tenha alguma falha de acesso ao Switch e Router
+!Limpando as configurações antigas de acesso remoto ao Switch e Router (Terminal: Ctrl+Alt+T)
+rm -v .ssh/known_hosts
+
+!Acessando remoto o Switch e Router utilizando o SSH no GNU/Linux ou Windows 10 Powershell
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc seu_usuario@172.16.???.253
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc seu_usuario@172.16.???.254
